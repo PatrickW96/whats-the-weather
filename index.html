@@ -18,12 +18,15 @@
         <main class="container-fluid row no-gutters p-0">
             <aside class="col-md-4 p-4">
                 <form class="mb-3" autocomplete="on">
-                    <label for="citySearch" class="h6 ml-0 row">Search for a City:</label>
-                    <input type="text" id="citySearch" name="citySearch">
-                    <button><i class="fas fa-search-location"></i></button>
+                    <label for="citySearched" class="h6 ml-0 row">Search for a City:</label>
+                    <input id="citySearched" type="text" name="citySearched">
+                    <button id="submitBtn"><i class="fas fa-search-location"></i></button>
                 </form>
             
             </aside>
+
+            <div id="weatherContainer" class="col-md-7 mx-auto"></div>            
+
         </main>
         <script src="scripts/script.js" async defer></script>
     </body>
