@@ -7,13 +7,24 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
         <link rel="stylesheet" href="css/styles.css">
+        <script src="https://kit.fontawesome.com/c42f1ec8f7.js" crossorigin="anonymous"></script>
         <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
     </head>
     <body>
-        <header class="container-fluid">
+        <header class="header-div">
             <h1>Weather Dashboard</h1>
-        </header>
-        
+        </header>        
+
+        <main class="container-fluid row no-gutters p-0">
+            <aside class="col-md-4 p-4">
+                <form class="mb-3" autocomplete="on">
+                    <label for="citySearch" class="h6 ml-0 row">Search for a City:</label>
+                    <input type="text" id="citySearch" name="citySearch">
+                    <button><i class="fas fa-search-location"></i></button>
+                </form>
+            
+            </aside>
+        </main>
         <script src="scripts/script.js" async defer></script>
     </body>
 </html>

@@ -1,6 +1,28 @@
-.container-fluid {
+.header-div {
     background-color: #4a5054;
     color: whitesmoke;
     padding: 12px;
     text-align: center;
+}
+
+#futureForecastDiv {
+    width: 100%;
+}
+
+#futureForecast {
+    width: 13%;
+}
+
+aside {
+    background-color: #f2f5f7;
+}
+
+form button {
+    border-radius: 5px;
+}
+
+.fa-search-location {
+    font-size: 1.25rem;
+    padding-top: 2.5px;
+    padding-bottom: 2.5px;
 }
