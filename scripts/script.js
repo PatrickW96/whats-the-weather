@@ -12,9 +12,11 @@ $(document).ready(function() {
             method: "GET"
         }).then(function(response) {
             var result = response;
+            var date = new Date(result.dt * 1000).toLocaleDateString();
 
+            console.log(date);
             console.log(searched);
-            console.log(result.dt);
+            console.log(result.weather[0].icon);
         });    
     });
 });
