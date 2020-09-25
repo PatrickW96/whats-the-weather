@@ -1,9 +1,8 @@
 $(document).ready(function() { 
 
     $('#submitBtn').on('click' , function(event) {
-
         event.preventDefault();
-        $('#currentCity').remove();  //Removing the last city before appending the next. 
+        $('#currentCity').remove();  //Removing the last city before appending the next.
 
         var searched = $('#citySearched').val();
         var APIkey = '889fa96c2ff3642885f0a0352803b7d4';
@@ -13,46 +12,47 @@ $(document).ready(function() {
             url: curentWeatherQueryURL,
             method: "GET"
         }).then(function(response) {
-            var result = response;
-            var date = new Date(result.dt * 1000).toLocaleDateString();
+            var date = new Date(response.dt * 1000).toLocaleDateString();
             var currentCity = `<div id="currentCity" class="border my-3 py-3">` +
-            `<h2 class="ml-4 p-1 pb-1">${result.name} (${date}) <img src="http://openweathermap.org/img/wn/${result.weather[0].icon}@2x.png"></h2>` +
-            `<p class="ml-4"><strong>Temperature:</strong> ${result.main.temp.toFixed(1)} &deg;F</p>` +
-            `<p class="ml-4 p-1"><strong>Humidity:</strong>${result.main.humidity} %</p>` +
-            `<p class="ml-4 p-1"><strong>Wind Speed:</strong> ${result.wind.speed} MPH</p>` +
+            `<h2 class="ml-4 p-1 pb-1">${response.name} (${date}) <img src="http://openweathermap.org/img/wn/${response.weather[0].icon}@2x.png"></h2>` +
+            `<p class="ml-4"><strong>Temperature:</strong> ${response.main.temp.toFixed(1)} &deg;F</p>` +
+            `<p class="ml-4 p-1"><strong>Humidity:</strong>${response.main.humidity} %</p>` +
+            `<p class="ml-4 p-1"><strong>Wind Speed:</strong> ${response.wind.speed} MPH</p>` +
             `<p class="ml-4 p-1"><strong>UV index:</strong>9.45</p>` +
            ` </div>`;
 
            $('#weatherContainer').append(currentCity);
-           $('#weatherContainer').append($('<h5>5-Day Forecast</h5>'));
+           $('#weatherContainer').append($('<h5 id="forecasth5">5-Day Forecast</h5>'));
 // ======================================================================================================================================
-           var cityID = result.id;
+           var cityID = response.id;
+           var futureForecastDiv = $(`<div>`).attr({class:'row mx-auto', id:'futureForecastDiv'});
            var forecastURL = `http://api.openweathermap.org/data/2.5/forecast?id=${cityID}&appid=${APIkey}&units=imperial`;
 
            $.ajax({
                 url: forecastURL,
                 method: "GET"
-            }).then(function(response2) {
-                var result2 = response2;
-                
-                for (var j = 0; j < 40; j + 5) {
-                    console.log("hey")
-                }
+            }).then(function(response2) {    
+                for (var i = 0; i <= 39; i+=8) {
+                    futureForecastDiv.append(`<div id="forecastDiv" class="border col-md-2 mx-3 my-1">` +
+                    `<h6 id="fiveDays${i}"></h6>` +
+                    `<img src="http://openweathermap.org/img/wn/${response2.list[i].weather[0].icon}@2x.png">` +
+                    `<p>Temp:${response2.list[i].main.temp.toFixed(1)}&deg;F</p>` +
+                    `<p>Humidity: ${response2.list[i].main.humidity}%</p>` +
+                    `</div>`);
+                    $('#weatherContainer').append(futureForecastDiv);
 
-                for (var i = 0; i < 5; i++) {
-                    var forecastDiv = 
-                        `<div id="forecastDiv" class="border col-sm-2 mr-3">` +
-                        `<h6>${date2}</h6>` +
-                        `<img src="http://openweathermap.org/img/wn/${result2.list[i].weather[0].icon}@2x.png">` +
-                        `<p>Temp:${result2.list[i].main.temp.toFixed(1)}&deg;F</p>` +
-                        `<p>Humidity: ${result2.list[i].main.humidity}%</p>` +
-                        `</div>`;
-                    $('#weatherContainer').append(forecastDiv);
-                    }            
-            })
+                    $('#fiveDays0').text(new Date(response2.list[0].dt * 1000).toLocaleDateString());
+                    $('#fiveDays8').text(new Date(response2.list[8].dt * 1000).toLocaleDateString());
+                    $('#fiveDays16').text(new Date(response2.list[16].dt * 1000).toLocaleDateString());
+                    $('#fiveDays24').text(new Date(response2.list[24].dt * 1000).toLocaleDateString());
+                    $('#fiveDays32').text(new Date(response2.list[32].dt * 1000).toLocaleDateString());
+                    };  
+            });
         });    
     });
 });
+
+
 
 // function fiveDayAPI() {
 //     var searchedCity = $('#citySearched').val();

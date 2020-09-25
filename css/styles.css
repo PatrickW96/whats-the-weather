@@ -7,9 +7,10 @@
 
 #futureForecastDiv {
     width: 100%;
+    display: flex;
 }
 
-#futureForecast {
+#forecastDiv {
     width: 13%;
 }
 
