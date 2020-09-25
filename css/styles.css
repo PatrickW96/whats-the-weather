@@ -5,6 +5,11 @@
     text-align: center;
 }
 
+#currentCity {
+    background-color: #157fc5;
+    color:white;
+}
+
 #futureForecastDiv {
     width: 100%;
     display: flex;
@@ -12,6 +17,8 @@
 
 #forecastDiv {
     width: 13%;
+    background-color: #2f8ece;
+    color:white;
 }
 
 aside {
@@ -20,6 +27,8 @@ aside {
 
 form button {
     border-radius: 5px;
+    background-color: #157fc5;
+    color:white;
 }
 
 .fa-search-location {
