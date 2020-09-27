@@ -1,3 +1,8 @@
+body {
+    background-image: url("../images/stunning-storm-clouds.jpg");
+    /* background-repeat: no-repeat; */
+}
+
 .header-div {
     background-color: #4a5054;
     color: whitesmoke;
