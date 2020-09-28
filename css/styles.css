@@ -1,6 +1,5 @@
 body {
-    background-image: url("../images/stunning-storm-clouds.jpg");
-    /* background-repeat: no-repeat; */
+    background-image: url("../images/beautiful-jpg.jpg");
 }
 
 .header-div {
@@ -13,6 +12,12 @@ body {
 #currentCity {
     background-color: #157fc5;
     color:white;
+    opacity: .8;
+    border-radius:10px;
+}
+
+#cityName {
+    margin-left: 25px !important;
 }
 
 #futureForecastDiv {
@@ -24,10 +29,14 @@ body {
     width: 13%;
     background-color: #2f8ece;
     color:white;
+    border-radius: 8px;
+    opacity: .8;
 }
 
 aside {
     background-color: #f2f5f7;
+    border-radius: 8px;
+    opacity: .8;
 }
 
 form button {
@@ -40,4 +49,10 @@ form button {
     font-size: 1.25rem;
     padding-top: 2.5px;
     padding-bottom: 2.5px;
+}
+
+@media screen and (max-width: 768px) {
+    #forecastDiv {
+        width: 90% !important;
+    }
 }
