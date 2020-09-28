@@ -9,6 +9,11 @@ body {
     text-align: center;
 }
 
+.city-searched {
+    cursor: pointer;
+    background-color: white;
+}
+
 #currentCity {
     background-color: #157fc5;
     color:white;
@@ -45,7 +50,7 @@ form button {
     color:white;
 }
 
-.fa-search-location {
+.fa-search-location, .fa-trash {
     font-size: 1.25rem;
     padding-top: 2.5px;
     padding-bottom: 2.5px;
