@@ -50,10 +50,22 @@ form button {
     color:white;
 }
 
-.fa-search-location, .fa-trash {
+.fa-search-location{
     font-size: 1.25rem;
     padding-top: 2.5px;
     padding-bottom: 2.5px;
+}
+
+#clearBtn {
+    border-radius: 5px;
+    background-color: #157fc5;
+    color:white;
+    float: right;
+}
+
+.uvi {
+    border-radius: 5px;
+    border: 1px white solid;
 }
 
 @media screen and (max-width: 768px) {
