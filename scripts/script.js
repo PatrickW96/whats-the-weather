@@ -3,11 +3,9 @@ $(document).ready(function () {
     var cityHistoryArray = [];   // Defininig array for search history
     var APIkey = '889fa96c2ff3642885f0a0352803b7d4';
 
-    // Submit button event function
+// Submit button event function
     $('#submitBtn').on('click', function (event) {
-        if($(`#citySearched`).val() === "") {
-            return false;
-        }
+        inputHelper();
         event.preventDefault();
 
         var searched = $('#citySearched').val().trim(); //Taking users input and adding it to API url
@@ -17,14 +15,14 @@ $(document).ready(function () {
         $('#weatherContainer').remove();  //Removing the last city before appending the next.
 
         var currentWeatherQueryURL = `http://api.openweathermap.org/data/2.5/weather?q=${searched}&appid=${APIkey}&units=imperial`;
-        // Current day ajax call
+// Current day ajax call
         $.ajax({
             url: currentWeatherQueryURL,
             method: "GET"
         }).then(function (response) {
             displayMainCard(response);
 
-            // UVI ajax call
+// UVI ajax call
             uviURL = `http://api.openweathermap.org/data/2.5/uvi?lat=${response.coord.lat}&lon=${response.coord.lon}&appid=${APIkey}`;
             $.ajax({
                 url : uviURL,
@@ -45,7 +43,7 @@ $(document).ready(function () {
             var futureForecastDiv = $(`<div>`).attr({ class: 'row mx-auto', id: 'futureForecastDiv' });
             var forecastURL = `http://api.openweathermap.org/data/2.5/forecast?id=${cityID}&appid=${APIkey}&units=imperial`;
 
-            // 5 day forecast ajax call
+// 5 day forecast ajax call
             $.ajax({
                 url: forecastURL,
                 method: "GET"
@@ -59,17 +57,17 @@ $(document).ready(function () {
 
     });
 
-    // HISTORY DIV CLICK EVENT
+// HISTORY DIV CLICK EVENT- RECALLING AJAX
     $(document).on('click' , '.city-searched' , function() {
         var city = $(this).text();
         var currentWeatherQueryURL = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${APIkey}&units=imperial`;
-        // Making both ajax calls again for redisplay functions 
+// CALLING CURRENT 
         $.ajax({
             url: currentWeatherQueryURL,
             method: "GET"
         }).then(function (responses) {
             redisplayHistory(city , responses);
-
+// CALLING UVI 
             uviURL = `http://api.openweathermap.org/data/2.5/uvi?lat=${responses.coord.lat}&lon=${responses.coord.lon}&appid=${APIkey}`;
             $.ajax({
                 url : uviURL,
@@ -86,24 +84,25 @@ $(document).ready(function () {
                     $(`.uvi`).css({'background-color':'red' , 'color':'black'});
                 }
             });
-                var cityIDs = responses.id;
-                var futureForecastDiv2 = $(`<div>`).attr({ class: 'row mx-auto', id: 'futureForecastDiv' });
-                var forecastURL2 = `http://api.openweathermap.org/data/2.5/forecast?id=${cityIDs}&appid=${APIkey}&units=imperial`;
+// CALLING 5 DAY 
+            var cityIDs = responses.id;
+            var futureForecastDiv2 = $(`<div>`).attr({ class: 'row mx-auto', id: 'futureForecastDiv' });
+            var forecastURL2 = `http://api.openweathermap.org/data/2.5/forecast?id=${cityIDs}&appid=${APIkey}&units=imperial`;
 
-                $.ajax({
-                    url: forecastURL2,
-                    method: "GET"
-                }).then(function (responses2) {
+            $.ajax({
+                url: forecastURL2,
+                method: "GET"
+            }).then(function (responses2) {
 
-                    for (var j = 0; j <= 39; j += 8) {
-                        redisplayFiveDay(futureForecastDiv2, responses2, j);
-                    };
-                });
+                for (var j = 0; j <= 39; j += 8) {
+                    redisplayFiveDay(futureForecastDiv2, responses2, j);
+                };
+            });
         });
     });
-    // ======================================================================================================================================
+// ======================================================================================================================================
 
-    // FUNCTIONS
+// FUNCTIONS
         function displayMainCard(apiData) {
             var weatherContainer = $(`<div id="weatherContainer" class="col-md-8 ml-md-4 mx-auto"></div>`);
             $('main').append(weatherContainer);
@@ -148,7 +147,7 @@ $(document).ready(function () {
 
 // ======================================================================================================================================
     
-    // REDISPLAYING HISTORY WITH FUNCTIONS BELOW
+// REDISPLAYING HISTORY WITH FUNCTIONS BELOW
         function redisplayHistory(city , apiData) {
             $('#weatherContainer').remove();  //Removing the last city before appending the next.
 
@@ -183,6 +182,12 @@ $(document).ready(function () {
             $('#fiveDays24').text(new Date(apiData.list[30].dt * 1000).toLocaleDateString());
             $('#fiveDays32').text(new Date(apiData.list[39].dt * 1000).toLocaleDateString());
         };
+
+        function inputHelper() {
+            if($(`#citySearched`).val() === "") {
+                return false;
+            }    
+        }
 
         function setStorage(index) {
             localStorage.setItem(`history${index}` , cityHistoryArray[index]);
