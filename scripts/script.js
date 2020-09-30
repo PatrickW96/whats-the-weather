@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-    displayCardOnLoad();
+    // displayCardOnLoad();
 
     var futureForecastContainer = $(`<div>`).attr({ class: 'row mx-auto', id: 'futureForecastDiv' });
     var APIkey = '889fa96c2ff3642885f0a0352803b7d4';
@@ -118,22 +118,22 @@ $(document).ready(function () {
 // ======================================================================================================================================
 
 // FUNCTIONS  FUNCTIONS  FUNCTIONS  FUNCTIONS  FUNCTIONS  FUNCTIONS  FUNCTIONS  FUNCTIONS  FUNCTIONS  FUNCTIONS
-    function displayCardOnLoad() {
-        var weatherContainer = $(`<div id="weatherContainer" class="col-md-8 ml-md-4 mx-auto"></div>`);
-        $('main').append(weatherContainer);
+    // function displayCardOnLoad() {
+    //     var weatherContainer = $(`<div id="weatherContainer" class="col-md-8 ml-md-4 mx-auto"></div>`);
+    //     $('main').append(weatherContainer);
 
-        var currentCity = `<div id="currentCity" class="border my-3 py-3">` +
-            `<h1 id="cityName" ml-3 p-1>${localStorage.getItem('city')}<h1>` +
-            `<h2 class="ml-4 p-1 pb-1">(${localStorage.getItem('date')}) <img src="http://openweathermap.org/img/wn/${localStorage.getItem('imgSrc')}@2x.png"></h2>` +
-            `<p class="ml-4"><strong>Temperature:</strong> ${localStorage.getItem('temp')} &deg;F</p>` +
-            `<p class="ml-4 p-1"><strong>Humidity:</strong> ${localStorage.getItem('humidity')} %</p>` +
-            `<p class="ml-4 p-1"><strong>Wind Speed:</strong> ${localStorage.getItem('windSpeed')} MPH</p>` +
-            `</div>`;
+    //     var currentCity = `<div id="currentCity" class="border my-3 py-3">` +
+    //         `<h1 id="cityName" ml-3 p-1>${localStorage.getItem('city')}<h1>` +
+    //         `<h2 class="ml-4 p-1 pb-1">(${localStorage.getItem('date')}) <img src="http://openweathermap.org/img/wn/${localStorage.getItem('imgSrc')}@2x.png"></h2>` +
+    //         `<p class="ml-4"><strong>Temperature:</strong> ${localStorage.getItem('temp')} &deg;F</p>` +
+    //         `<p class="ml-4 p-1"><strong>Humidity:</strong> ${localStorage.getItem('humidity')} %</p>` +
+    //         `<p class="ml-4 p-1"><strong>Wind Speed:</strong> ${localStorage.getItem('windSpeed')} MPH</p>` +
+    //         `</div>`;
 
-        $('#weatherContainer').append(currentCity);
-        $('#weatherContainer').append($('<h5 id="forecasth5">5-Day Forecast</h5>'));
-        $(`#currentCity`).append(`<p class="ml-4 p-1"><strong>UV Index:</strong> <span class="uvi p-2">${localStorage.getItem('uvIndex')}</span></p>`);
-    };
+    //     $('#weatherContainer').append(currentCity);
+    //     $('#weatherContainer').append($('<h5 id="forecasth5">5-Day Forecast</h5>'));
+    //     $(`#currentCity`).append(`<p class="ml-4 p-1"><strong>UV Index:</strong> <span class="uvi p-2">${localStorage.getItem('uvIndex')}</span></p>`);
+    // };
 
     function forecastOnload(index) {
         futureForecastContainer.append(`<div id="forecastDiv" class="border col-md-2 mx-3 my-1">` +
