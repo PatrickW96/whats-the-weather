@@ -1,19 +1,24 @@
 $(document).ready(function () {
 
     displayCardOnLoad();
-    uviOnLoad();
 
     var futureForecastContainer = $(`<div>`).attr({ class: 'row mx-auto', id: 'futureForecastDiv' });
+    var APIkey = '889fa96c2ff3642885f0a0352803b7d4';
+    var cityHistoryArray = [];   // Defininig array for search history
+
+    for (var n = 0; n < cityHistoryArray.length; n++) {
+        historyOnLoad(n);
+    };
+
 
     for (var m = 0; m <= 39; m += 8) {
         forecastOnload(m);
-    }
+    };
 
-    var cityHistoryArray = [];   // Defininig array for search history
-    var APIkey = '889fa96c2ff3642885f0a0352803b7d4';
 
 // Submit button event function
     $('#submitBtn').on('click', function (event) {
+        clicked = true;
         inputHelper();
         event.preventDefault();
 
@@ -66,9 +71,7 @@ $(document).ready(function () {
                 };
             });
         });
-
     });
-
 // HISTORY DIV CLICK EVENT- RECALLING AJAX
     $(document).on('click' , '.city-searched' , function() {
         var city = $(this).text();
@@ -115,153 +118,154 @@ $(document).ready(function () {
 // ======================================================================================================================================
 
 // FUNCTIONS  FUNCTIONS  FUNCTIONS  FUNCTIONS  FUNCTIONS  FUNCTIONS  FUNCTIONS  FUNCTIONS  FUNCTIONS  FUNCTIONS
-        function displayCardOnLoad() {
-                var weatherContainer = $(`<div id="weatherContainer" class="col-md-8 ml-md-4 mx-auto"></div>`);
-                $('main').append(weatherContainer);
+    function displayCardOnLoad() {
+        var weatherContainer = $(`<div id="weatherContainer" class="col-md-8 ml-md-4 mx-auto"></div>`);
+        $('main').append(weatherContainer);
 
-                var currentCity = `<div id="currentCity" class="border my-3 py-3">` +
-                    `<h1 id="cityName" ml-3 p-1>${localStorage.getItem('city')}<h1>` +
-                    `<h2 class="ml-4 p-1 pb-1">(${localStorage.getItem('date')}) <img src="http://openweathermap.org/img/wn/${localStorage.getItem('imgSrc')}@2x.png"></h2>` +
-                    `<p class="ml-4"><strong>Temperature:</strong> ${localStorage.getItem('temp')} &deg;F</p>` +
-                    `<p class="ml-4 p-1"><strong>Humidity:</strong> ${localStorage.getItem('humidity')} %</p>` +
-                    `<p class="ml-4 p-1"><strong>Wind Speed:</strong> ${localStorage.getItem('windSpeed')} MPH</p>` +
-                    `</div>`;
+        var currentCity = `<div id="currentCity" class="border my-3 py-3">` +
+            `<h1 id="cityName" ml-3 p-1>${localStorage.getItem('city')}<h1>` +
+            `<h2 class="ml-4 p-1 pb-1">(${localStorage.getItem('date')}) <img src="http://openweathermap.org/img/wn/${localStorage.getItem('imgSrc')}@2x.png"></h2>` +
+            `<p class="ml-4"><strong>Temperature:</strong> ${localStorage.getItem('temp')} &deg;F</p>` +
+            `<p class="ml-4 p-1"><strong>Humidity:</strong> ${localStorage.getItem('humidity')} %</p>` +
+            `<p class="ml-4 p-1"><strong>Wind Speed:</strong> ${localStorage.getItem('windSpeed')} MPH</p>` +
+            `</div>`;
 
-                $('#weatherContainer').append(currentCity);
-                $('#weatherContainer').append($('<h5 id="forecasth5">5-Day Forecast</h5>'));
+        $('#weatherContainer').append(currentCity);
+        $('#weatherContainer').append($('<h5 id="forecasth5">5-Day Forecast</h5>'));
+        $(`#currentCity`).append(`<p class="ml-4 p-1"><strong>UV Index:</strong> <span class="uvi p-2">${localStorage.getItem('uvIndex')}</span></p>`);
+    };
+
+    function forecastOnload(index) {
+        futureForecastContainer.append(`<div id="forecastDiv" class="border col-md-2 mx-3 my-1">` +
+            `<h6 id="fiveDays${index}"></h6>` +
+            `<img src="http://openweathermap.org/img/wn/${localStorage.getItem('img')}@2x.png">` +
+            `<p>Temp:${localStorage.getItem('temperature')}&deg;F</p>` +
+            `<p>Humidity: ${localStorage.getItem('humid')}%</p>` +
+            `</div>`);
+        $('#weatherContainer').append(futureForecastContainer);
+
+        $('#fiveDays0').text(localStorage.getItem(`date0`));
+        $('#fiveDays8').text(localStorage.getItem(`date8`));
+        $('#fiveDays16').text(localStorage.getItem(`date16`));
+        $('#fiveDays24').text(localStorage.getItem(`date24`));
+        $('#fiveDays32').text(localStorage.getItem(`date32`));
+    };
+
+    function historyOnLoad(index) {
+        $(`.city-searched`).attr(`class` , `city${index}`);
+    };
+
+    function displayMainCard(apiData) {
+        var weatherContainer = $(`<div id="weatherContainer" class="col-md-8 ml-md-4 mx-auto"></div>`);
+        $('main').append(weatherContainer);
+
+        var date = new Date(apiData.dt * 1000).toLocaleDateString();
+        var currentCity = `<div id="currentCity" class="border my-3 py-3">` +
+        `<h1 id="cityName" ml-3 p-1>${apiData.name.toUpperCase()}<h1>` +
+        `<h2 class="ml-4 p-1 pb-1">(${date}) <img src="http://openweathermap.org/img/wn/${apiData.weather[0].icon}@2x.png"></h2>` +
+        `<p class="ml-4"><strong>Temperature:</strong> ${apiData.main.temp.toFixed(1)} &deg;F</p>` +
+        `<p class="ml-4 p-1"><strong>Humidity:</strong> ${apiData.main.humidity} %</p>` +
+        `<p class="ml-4 p-1"><strong>Wind Speed:</strong> ${apiData.wind.speed} MPH</p>` +
+        `</div>`;
+
+        $('#weatherContainer').append(currentCity);
+        $('#weatherContainer').append($('<h5 id="forecasth5">5-Day Forecast</h5>'));
+    };
+
+    function displayFiveDay(futureForecastDiv, apiData, currentIndex) {
+        futureForecastDiv.append(`<div id="forecastDiv" class="border col-md-2 mx-3 my-1">` +
+        `<h6 id="fiveDays${currentIndex}"></h6>` +
+        `<img src="http://openweathermap.org/img/wn/${apiData.list[currentIndex].weather[0].icon}@2x.png">` +
+        `<p>Temp:${apiData.list[currentIndex].main.temp.toFixed(1)}&deg;F</p>` +
+        `<p>Humidity: ${apiData.list[currentIndex].main.humidity}%</p>` +
+        `</div>`);
+        $('#weatherContainer').append(futureForecastDiv);
+
+        $('#fiveDays0').text(new Date(apiData.list[7].dt * 1000).toLocaleDateString());
+        $('#fiveDays8').text(new Date(apiData.list[15].dt * 1000).toLocaleDateString());
+        $('#fiveDays16').text(new Date(apiData.list[23].dt * 1000).toLocaleDateString());
+        $('#fiveDays24').text(new Date(apiData.list[30].dt * 1000).toLocaleDateString());
+        $('#fiveDays32').text(new Date(apiData.list[39].dt * 1000).toLocaleDateString());
+    };
+
+    function displayHistory() {
+        $('.search-history').empty();
+        for (var k = 0; k < cityHistoryArray.length; k++) {
+            var historyDiv = $(`<div class="border p-3 city-searched city${k}">${cityHistoryArray[k].toUpperCase()}<button id="clearBtn"><i class="fas fa-trash"></i></button></div>`);
+            $('.search-history').append(historyDiv);
+            historyStorage(k);
         };
-
-        function uviOnLoad() {
-                $(`#currentCity`).append(`<p class="ml-4 p-1"><strong>UV Index:</strong> <span class="uvi p-2">${localStorage.getItem('uvIndex')}</span></p>`);
-        };
-
-        function forecastOnload(index) {
-                futureForecastContainer.append(`<div id="forecastDiv" class="border col-md-2 mx-3 my-1">` +
-                `<h6 id="fiveDays${index}"></h6>` +
-                `<img src="http://openweathermap.org/img/wn/${localStorage.getItem('img')}@2x.png">` +
-                `<p>Temp:${localStorage.getItem('temperature')}&deg;F</p>` +
-                `<p>Humidity: ${localStorage.getItem('humid')}%</p>` +
-                `</div>`);
-                $('#weatherContainer').append(futureForecastContainer);
-
-                $('#fiveDays0').text(localStorage.getItem(`date0`));
-                $('#fiveDays8').text(localStorage.getItem(`date8`));
-                $('#fiveDays16').text(localStorage.getItem(`date16`));
-                $('#fiveDays24').text(localStorage.getItem(`date24`));
-                $('#fiveDays32').text(localStorage.getItem(`date32`));
-        };
-
-        function displayMainCard(apiData) {
-            var weatherContainer = $(`<div id="weatherContainer" class="col-md-8 ml-md-4 mx-auto"></div>`);
-            $('main').append(weatherContainer);
-
-            var date = new Date(apiData.dt * 1000).toLocaleDateString();
-            var currentCity = `<div id="currentCity" class="border my-3 py-3">` +
-                `<h1 id="cityName" ml-3 p-1>${apiData.name.toUpperCase()}<h1>` +
-                `<h2 class="ml-4 p-1 pb-1">(${date}) <img src="http://openweathermap.org/img/wn/${apiData.weather[0].icon}@2x.png"></h2>` +
-                `<p class="ml-4"><strong>Temperature:</strong> ${apiData.main.temp.toFixed(1)} &deg;F</p>` +
-                `<p class="ml-4 p-1"><strong>Humidity:</strong> ${apiData.main.humidity} %</p>` +
-                `<p class="ml-4 p-1"><strong>Wind Speed:</strong> ${apiData.wind.speed} MPH</p>` +
-                `</div>`;
-
-            $('#weatherContainer').append(currentCity);
-            $('#weatherContainer').append($('<h5 id="forecasth5">5-Day Forecast</h5>'));
-        };
-
-        function displayFiveDay(futureForecastDiv, apiData, currentIndex) {
-            futureForecastDiv.append(`<div id="forecastDiv" class="border col-md-2 mx-3 my-1">` +
-                `<h6 id="fiveDays${currentIndex}"></h6>` +
-                `<img src="http://openweathermap.org/img/wn/${apiData.list[currentIndex].weather[0].icon}@2x.png">` +
-                `<p>Temp:${apiData.list[currentIndex].main.temp.toFixed(1)}&deg;F</p>` +
-                `<p>Humidity: ${apiData.list[currentIndex].main.humidity}%</p>` +
-                `</div>`);
-            $('#weatherContainer').append(futureForecastDiv);
-
-            $('#fiveDays0').text(new Date(apiData.list[7].dt * 1000).toLocaleDateString());
-            $('#fiveDays8').text(new Date(apiData.list[15].dt * 1000).toLocaleDateString());
-            $('#fiveDays16').text(new Date(apiData.list[23].dt * 1000).toLocaleDateString());
-            $('#fiveDays24').text(new Date(apiData.list[30].dt * 1000).toLocaleDateString());
-            $('#fiveDays32').text(new Date(apiData.list[39].dt * 1000).toLocaleDateString());
-        };
-
-        function displayHistory() {
-            $('.search-history').empty();
-            for (var k = 0; k < cityHistoryArray.length; k++) {
-                var historyDiv = $(`<div class="border p-3 city-searched city${k}">${cityHistoryArray[k].toUpperCase()}<button id="clearBtn"><i class="fas fa-trash"></i></button></div>`);
-                $('.search-history').append(historyDiv);
-                historyStorage(k);
-            };
-        };
+    };
     
 // REDISPLAYING HISTORY WITH FUNCTIONS BELOW
-        function redisplayHistory(city , apiData) {
-            $('#weatherContainer').remove();  //Removing the last city before appending the next.
+    function redisplayHistory(city , apiData) {
+        $('#weatherContainer').remove();  //Removing the last city before appending the next.
 
-            var weatherContainer = $(`<div id="weatherContainer" class="col-md-8 ml-md-4 mx-auto"></div>`);
-            $('main').append(weatherContainer);
+        var weatherContainer = $(`<div id="weatherContainer" class="col-md-8 ml-md-4 mx-auto"></div>`);
+        $('main').append(weatherContainer);
 
-            var date = new Date(apiData.dt * 1000).toLocaleDateString();
-            var reCurrentCity = `<div id="currentCity" class="border my-3 py-3">` +
-                `<h1 id="cityName" ml-3 p-1>${city}<h1>` +
-                `<h2 class="ml-4 p-1 pb-1">(${date}) <img src="http://openweathermap.org/img/wn/${apiData.weather[0].icon}@2x.png"></h2>` +
-                `<p class="ml-4"><strong>Temperature:</strong> ${apiData.main.temp.toFixed(1)} &deg;F</p>` +
-                `<p class="ml-4 p-1"><strong>Humidity:</strong> ${apiData.main.humidity} %</p>` +
-                `<p class="ml-4 p-1"><strong>Wind Speed:</strong> ${apiData.wind.speed} MPH</p>` +
-                `</div>`;
+        var date = new Date(apiData.dt * 1000).toLocaleDateString();
+        var reCurrentCity = `<div id="currentCity" class="border my-3 py-3">` +
+        `<h1 id="cityName" ml-3 p-1>${city}<h1>` +
+        `<h2 class="ml-4 p-1 pb-1">(${date}) <img src="http://openweathermap.org/img/wn/${apiData.weather[0].icon}@2x.png"></h2>` +
+        `<p class="ml-4"><strong>Temperature:</strong> ${apiData.main.temp.toFixed(1)} &deg;F</p>` +
+        `<p class="ml-4 p-1"><strong>Humidity:</strong> ${apiData.main.humidity} %</p>` +
+        `<p class="ml-4 p-1"><strong>Wind Speed:</strong> ${apiData.wind.speed} MPH</p>` +
+        `</div>`;
 
-            $('#weatherContainer').append(reCurrentCity);
-            $('#weatherContainer').append($('<h5 id="forecasth5">5-Day Forecast</h5>'));
-        };
+        $('#weatherContainer').append(reCurrentCity);
+        $('#weatherContainer').append($('<h5 id="forecasth5">5-Day Forecast</h5>'));
+    };
 
-        function redisplayFiveDay(futureForecastDiv2, apiData, currentIndex) {
-            futureForecastDiv2.append(`<div id="forecastDiv" class="border col-md-2 mx-3 my-1">` +
-                `<h6 id="fiveDays${currentIndex}"></h6>` +
-                `<img src="http://openweathermap.org/img/wn/${apiData.list[currentIndex].weather[0].icon}@2x.png">` +
-                `<p>Temp:${apiData.list[currentIndex].main.temp.toFixed(1)}&deg;F</p>` +
-                `<p>Humidity: ${apiData.list[currentIndex].main.humidity}%</p>` +
-                `</div>`);
-            $('#weatherContainer').append(futureForecastDiv2);
+    function redisplayFiveDay(futureForecastDiv2, apiData, currentIndex) {
+        futureForecastDiv2.append(`<div id="forecastDiv" class="border col-md-2 mx-3 my-1">` +
+        `<h6 id="fiveDays${currentIndex}"></h6>` +
+        `<img src="http://openweathermap.org/img/wn/${apiData.list[currentIndex].weather[0].icon}@2x.png">` +
+        `<p>Temp:${apiData.list[currentIndex].main.temp.toFixed(1)}&deg;F</p>` +
+        `<p>Humidity: ${apiData.list[currentIndex].main.humidity}%</p>` +
+        `</div>`);
+        $('#weatherContainer').append(futureForecastDiv2);
 
-            $('#fiveDays0').text(new Date(apiData.list[7].dt * 1000).toLocaleDateString());
-            $('#fiveDays8').text(new Date(apiData.list[15].dt * 1000).toLocaleDateString());
-            $('#fiveDays16').text(new Date(apiData.list[23].dt * 1000).toLocaleDateString());
-            $('#fiveDays24').text(new Date(apiData.list[31].dt * 1000).toLocaleDateString());
-            $('#fiveDays32').text(new Date(apiData.list[39].dt * 1000).toLocaleDateString());
-        };
+        $('#fiveDays0').text(new Date(apiData.list[7].dt * 1000).toLocaleDateString());
+        $('#fiveDays8').text(new Date(apiData.list[15].dt * 1000).toLocaleDateString());
+        $('#fiveDays16').text(new Date(apiData.list[23].dt * 1000).toLocaleDateString());
+        $('#fiveDays24').text(new Date(apiData.list[31].dt * 1000).toLocaleDateString());
+        $('#fiveDays32').text(new Date(apiData.list[39].dt * 1000).toLocaleDateString());
+    };
 
-        function inputHelper() {
-            if($(`#citySearched`).val() === "") {
-                return false;
-            };    
-        };
+    function inputHelper() {
+        if($(`#citySearched`).val() === "") {
+    return false;
+        };    
+    };
 
-        function historyStorage(index) {
-            localStorage.setItem(`history${index}` , cityHistoryArray[index]);
-        };
-        
-        function mainCardStorage(apiData) {
-            var date = new Date(apiData.dt * 1000).toLocaleDateString();
+    function historyStorage(index) {
+        localStorage.setItem(`history${index}` , cityHistoryArray[index]);
+    };
 
-            localStorage.setItem('city' , apiData.name);
-            localStorage.setItem('date' , date);
-            localStorage.setItem('imgSrc' , apiData.weather[0].icon);
-            localStorage.setItem('temp' , apiData.main.temp.toFixed(1));
-            localStorage.setItem('humidity' , apiData.main.humidity);
-            localStorage.setItem('windSpeed' , apiData.wind.speed);
-        };
+    function mainCardStorage(apiData) {
+        var date = new Date(apiData.dt * 1000).toLocaleDateString();
 
-        function uviStorage(apiData) {
-            localStorage.setItem('uvIndex' , apiData.value);
-        };
+        localStorage.setItem('city' , apiData.name);
+        localStorage.setItem('date' , date);
+        localStorage.setItem('imgSrc' , apiData.weather[0].icon);
+        localStorage.setItem('temp' , apiData.main.temp.toFixed(1));
+        localStorage.setItem('humidity' , apiData.main.humidity);
+        localStorage.setItem('windSpeed' , apiData.wind.speed);
+    };
 
-        function forecastStorage(apiData, index) {
-                localStorage.setItem(`date0` , new Date (apiData.list[7].dt * 1000).toLocaleDateString());
-                localStorage.setItem(`date8` , new Date (apiData.list[15].dt * 1000).toLocaleDateString());
-                localStorage.setItem(`date16` , new Date (apiData.list[23].dt * 1000).toLocaleDateString());
-                localStorage.setItem(`date24` , new Date (apiData.list[31].dt * 1000).toLocaleDateString());
-                localStorage.setItem(`date32` , new Date (apiData.list[39].dt * 1000).toLocaleDateString());
-                localStorage.setItem(`img` , apiData.list[index].weather[0].icon);
-                localStorage.setItem(`temperature` , apiData.list[index].main.temp.toFixed(1));
-                localStorage.setItem(`humid` , apiData.list[index].main.humidity);
-        };
+    function uviStorage(apiData) {
+        localStorage.setItem('uvIndex' , apiData.value);
+    };
+
+    function forecastStorage(apiData, index) {
+        localStorage.setItem(`date0` , new Date (apiData.list[7].dt * 1000).toLocaleDateString());
+        localStorage.setItem(`date8` , new Date (apiData.list[15].dt * 1000).toLocaleDateString());
+        localStorage.setItem(`date16` , new Date (apiData.list[23].dt * 1000).toLocaleDateString());
+        localStorage.setItem(`date24` , new Date (apiData.list[31].dt * 1000).toLocaleDateString());
+        localStorage.setItem(`date32` , new Date (apiData.list[39].dt * 1000).toLocaleDateString());
+        localStorage.setItem(`img` , apiData.list[index].weather[0].icon);
+        localStorage.setItem(`temperature` , apiData.list[index].main.temp.toFixed(1));
+        localStorage.setItem(`humid` , apiData.list[index].main.humidity);
+    };
 });
