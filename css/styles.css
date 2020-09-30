@@ -68,6 +68,10 @@ form button {
     border: 1px white solid;
 }
 
+.hide {
+    display: none;
+}
+
 @media screen and (max-width: 768px) {
     #forecastDiv {
         width: 90% !important;
