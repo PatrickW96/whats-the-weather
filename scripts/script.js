@@ -1,5 +1,4 @@
 $(document).ready(function () {
-    var clicked = false;
 
     displayCardOnLoad();
     uviOnLoad();
@@ -15,7 +14,6 @@ $(document).ready(function () {
 
 // Submit button event function
     $('#submitBtn').on('click', function (event) {
-        clicked = true;
         inputHelper();
         event.preventDefault();
 
@@ -118,7 +116,6 @@ $(document).ready(function () {
 
 // FUNCTIONS  FUNCTIONS  FUNCTIONS  FUNCTIONS  FUNCTIONS  FUNCTIONS  FUNCTIONS  FUNCTIONS  FUNCTIONS  FUNCTIONS
         function displayCardOnLoad() {
-            if (clicked !== false) { 
                 var weatherContainer = $(`<div id="weatherContainer" class="col-md-8 ml-md-4 mx-auto"></div>`);
                 $('main').append(weatherContainer);
 
@@ -132,17 +129,13 @@ $(document).ready(function () {
 
                 $('#weatherContainer').append(currentCity);
                 $('#weatherContainer').append($('<h5 id="forecasth5">5-Day Forecast</h5>'));
-            };
         };
 
         function uviOnLoad() {
-            if (clicked !== false) { 
                 $(`#currentCity`).append(`<p class="ml-4 p-1"><strong>UV Index:</strong> <span class="uvi p-2">${localStorage.getItem('uvIndex')}</span></p>`);
-            };
         };
 
         function forecastOnload(index) {
-            if (clicked !== false) { 
                 futureForecastContainer.append(`<div id="forecastDiv" class="border col-md-2 mx-3 my-1">` +
                 `<h6 id="fiveDays${index}"></h6>` +
                 `<img src="http://openweathermap.org/img/wn/${localStorage.getItem('img')}@2x.png">` +
@@ -156,7 +149,6 @@ $(document).ready(function () {
                 $('#fiveDays16').text(localStorage.getItem(`date16`));
                 $('#fiveDays24').text(localStorage.getItem(`date24`));
                 $('#fiveDays32').text(localStorage.getItem(`date32`));
-            };
         };
 
         function displayMainCard(apiData) {
