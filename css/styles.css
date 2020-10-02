@@ -1,5 +1,5 @@
 body {
-    background-image: url("../images/beautiful-jpg.jpg");
+    background-image: url("../images/backgroun.jpg");
 }
 
 .header-div {
@@ -11,7 +11,7 @@ body {
 
 .city-searched {
     cursor: pointer;
-    background-color: white;
+    background-color: whitesmoke;
 }
 
 #currentCity {
@@ -36,6 +36,10 @@ body {
     color:white;
     border-radius: 8px;
     opacity: .8;
+}
+
+#forecasth5 {
+    color: whitesmoke;
 }
 
 aside {
