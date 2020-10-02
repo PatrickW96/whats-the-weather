@@ -6,7 +6,7 @@ $(document).ready(function () {
     var APIkey = '889fa96c2ff3642885f0a0352803b7d4';
     var cityHistoryArray = [];   // Defininig array for search history
 
-    historyOnLoad();
+    // historyOnLoad();
 
 
     for (var m = 0; m <= 39; m += 8) {
