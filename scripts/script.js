@@ -157,7 +157,7 @@ $(document).ready(function () {
 
         var date = new Date(apiData.dt * 1000).toLocaleDateString();
         var currentCity = `<div id="currentCity" class="border my-3 py-3">` +
-        `<h1 id="cityName" ml-3 p-1>${apiData.name.toUpperCase()}<h1>` +
+        `<h1 id="cityName" ml-3 p-1>${apiData.name}<h1>` +
         `<h2 class="ml-4 p-1 pb-1">(${date}) <img src="http://openweathermap.org/img/wn/${apiData.weather[0].icon}@2x.png"></h2>` +
         `<p class="ml-4"><strong>Temperature:</strong> ${apiData.main.temp.toFixed(1)} &deg;F</p>` +
         `<p class="ml-4 p-1"><strong>Humidity:</strong> ${apiData.main.humidity} %</p>` +
