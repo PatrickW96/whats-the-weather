@@ -17,7 +17,7 @@ body {
 #currentCity {
     background-color: #157fc5;
     color:white;
-    opacity: .8;
+    opacity: 1;
     border-radius:10px;
 }
 
@@ -35,7 +35,7 @@ body {
     background-color: #2f8ece;
     color:white;
     border-radius: 8px;
-    opacity: .8;
+    opacity: 1;
 }
 
 #forecasth5 {
@@ -45,7 +45,7 @@ body {
 aside {
     background-color: #f2f5f7;
     border-radius: 8px;
-    opacity: .8;
+    opacity: 1;
 }
 
 form button {
