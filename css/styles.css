@@ -7,6 +7,7 @@ body {
     color: whitesmoke;
     padding: 12px;
     text-align: center;
+    opacity: .9;
 }
 
 .city-searched {
@@ -44,7 +45,8 @@ body {
 
 aside {
     background-color: #f2f5f7;
-    border-radius: 8px;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
     opacity: 1;
 }
 
@@ -74,6 +76,10 @@ form button {
 
 .hide {
     display: none;
+}
+
+p {
+    font-size: 18px;
 }
 
 @media screen and (max-width: 768px) {

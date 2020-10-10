@@ -11,7 +11,6 @@ $(document).ready(function () {
         forecastOnload(m);
     };
 
-
 // Submit button event function
     $('#submitBtn').on('click', function (event) {
         clicked = true;
@@ -24,7 +23,7 @@ $(document).ready(function () {
         displayHistory(); //Function used to display users searched history.
         $('#weatherContainer').remove();  //Removing the last city before appending the next.
 
-        var currentWeatherQueryURL = `http://api.openweathermap.org/data/2.5/weather?q=${searched}&appid=${APIkey}&units=imperial`;
+        var currentWeatherQueryURL = `https://api.openweathermap.org/data/2.5/weather?q=${searched}&appid=${APIkey}&units=imperial`;
 // Current day ajax call
         $.ajax({
             url: currentWeatherQueryURL,
@@ -34,7 +33,7 @@ $(document).ready(function () {
             mainCardStorage(response);
 
 // UVI ajax call
-            uviURL = `http://api.openweathermap.org/data/2.5/uvi?lat=${response.coord.lat}&lon=${response.coord.lon}&appid=${APIkey}`;
+            uviURL = `https://api.openweathermap.org/data/2.5/uvi?lat=${response.coord.lat}&lon=${response.coord.lon}&appid=${APIkey}`;
             $.ajax({
                 url : uviURL,
                 method : "GET"
@@ -43,9 +42,9 @@ $(document).ready(function () {
                 if(result.value <= 3) {
                     $(`.uvi`).css({'background-color':'green' , 'color':'black'});
                 } 
-                if (result.value > 3 && result.value < 6) {
+                if (result.value > 3 && result.value <= 6) {
                     $(`.uvi`).css({'background-color':'yellow' , 'color':'black'});
-                } else {
+                } if (result.value > 6) {
                     $(`.uvi`).css({'background-color':'red' , 'color':'black'});
                 }
                 uviStorage(result);
@@ -53,7 +52,7 @@ $(document).ready(function () {
 
             var cityID = response.id;
             var futureForecastDiv = $(`<div>`).attr({ class: 'row mx-auto', id: 'futureForecastDiv' });
-            var forecastURL = `http://api.openweathermap.org/data/2.5/forecast?id=${cityID}&appid=${APIkey}&units=imperial`;
+            var forecastURL = `https://api.openweathermap.org/data/2.5/forecast?id=${cityID}&appid=${APIkey}&units=imperial`;
 
 // 5 day forecast ajax call
             $.ajax({
@@ -88,7 +87,7 @@ $(document).ready(function () {
                 if(result.value <= 3) {
                     $(`.uvi`).css({'background-color':'green' , 'color':'black'});
                 } 
-                if (result.value > 3 && result.value < 6) {
+                if (result.value > 3 && result.value <= 6) {
                     $(`.uvi`).css({'background-color':'yellow' , 'color':'black'});
                 }
                 if (result.value > 6) {
@@ -114,6 +113,8 @@ $(document).ready(function () {
 // ======================================================================================================================================
 
 // FUNCTIONS  FUNCTIONS  FUNCTIONS  FUNCTIONS  FUNCTIONS  FUNCTIONS  FUNCTIONS  FUNCTIONS  FUNCTIONS  FUNCTIONS
+
+// Display current city card on load with data saved in users local storage
     function displayCardOnLoad() {
         var weatherContainer = $(`<div id="weatherContainer" class="col-md-8 ml-md-4 mx-auto"></div>`);
         $('main').append(weatherContainer);
@@ -129,8 +130,10 @@ $(document).ready(function () {
         $('#weatherContainer').append(currentCity);
         $('#weatherContainer').append($('<h5 id="forecasth5">5-Day Forecast</h5>'));
         $(`#currentCity`).append(`<p class="ml-4 p-1"><strong>UV Index:</strong> <span class="uvi p-2">${localStorage.getItem('uvIndex')}</span></p>`);
+        uviDetector();
     };
 
+// Display forecast card on load with data saved in users local storage
     function forecastOnload(index) {
         futureForecastContainer.append(`<div id="forecastDiv" class="border col-md-2 mx-3 my-1">` +
             `<h6 id="fiveDays${index}"></h6>` +
@@ -147,6 +150,7 @@ $(document).ready(function () {
         $('#fiveDays32').text(localStorage.getItem(`date32`));
     };
 
+// Creating and displaying cards with data pulled from ajax request
     function displayMainCard(apiData) {
         var weatherContainer = $(`<div id="weatherContainer" class="col-md-8 ml-md-4 mx-auto"></div>`);
         $('main').append(weatherContainer);
@@ -183,7 +187,7 @@ $(document).ready(function () {
     function displayHistory() {
         $('.search-history').empty();
         for (var k = 0; k < cityHistoryArray.length; k++) {
-            var historyDiv = $(`<div class="border p-3 city-searched city${k}">${cityHistoryArray[k].toUpperCase()}<button id="clearBtn"><i class="fas fa-trash"></i></button></div>`);
+            var historyDiv = $(`<div class="border p-3 city-searched city${k}">${cityHistoryArray[k]}</div>`);
             $('.search-history').append(historyDiv);
             historyStorage(k);
         };
@@ -225,6 +229,7 @@ $(document).ready(function () {
         $('#fiveDays32').text(new Date(apiData.list[39].dt * 1000).toLocaleDateString());
     };
 
+// Input helper function that restricts a search unless the user adds text into the input field
     function inputHelper() {
         if($(`#citySearched`).val() === "") {
     return false;
@@ -232,7 +237,7 @@ $(document).ready(function () {
     };
 
     function historyStorage(index) {
-        localStorage.setItem(`history${index}` , cityHistoryArray[index]);
+        localStorage.setItem(`searched${index}` , cityHistoryArray[index]);
     };
 
     function mainCardStorage(apiData) {
@@ -261,11 +266,25 @@ $(document).ready(function () {
         localStorage.setItem(`humid` , apiData.list[index].main.humidity);
     };
 
+// Helper function that denies card from displaying if any info says null
     function nullDetector() {
         if($('#cityName').text() === "null") {
             $('#weatherContainer').addClass('hide');
         } else {
             return;
         };    
+    };
+
+// Function to display uvi warning colors too uvi box on page reload
+    function uviDetector() {
+        if($('.uvi').text() <= 3) {
+            $(`.uvi`).css({'background-color':'green' , 'color':'black'});
+        } 
+        if ($('.uvi').text() > 3 && $('.uvi').text() < 6) {
+            $(`.uvi`).css({'background-color':'yellow' , 'color':'black'});
+        }
+        if ($('.uvi').text() > 6) {
+            $(`.uvi`).css({'background-color':'red' , 'color':'black'});
+        };
     };
 });
